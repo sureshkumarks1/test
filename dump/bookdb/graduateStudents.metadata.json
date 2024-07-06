@@ -1,0 +1,1 @@
+{"options":{"viewOn":"students","pipeline":[{"$match":{"$expr":{"$gt":["$year",{"$numberInt":"4"}]}}}]},"indexes":[],"collectionName":"graduateStudents","type":"view"}

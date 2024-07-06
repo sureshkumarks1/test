@@ -1,0 +1,1 @@
+{"options":{"viewOn":"students","pipeline":[{"$lookup":{"from":"order","localField":"_id","foreignField":"orderId","as":"lookup"}}]},"indexes":[],"collectionName":"studorder","type":"view"}

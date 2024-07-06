@@ -1,0 +1,1 @@
+{"options":{"viewOn":"students","pipeline":[{"$match":{"year":{"$numberInt":"1"}}}]},"indexes":[],"collectionName":"firstYears","type":"view"}

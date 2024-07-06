@@ -1,0 +1,161 @@
+<%-include("../layouts/header.ejs")-%>
+<div id="layoutSidenav_content">
+  <main>
+    <div class="container-fluid px-4" id="divtable">
+      <h1 class="mt-4">Catagory</h1>
+      <ol class="breadcrumb mb-4">
+        <li class="breadcrumb-item"><a href="/admin/home">Dashboard</a></li>
+        <li class="breadcrumb-item active">Catagory</li>
+      </ol>
+
+      <div class="card mb-4">
+        <div class="card-header">
+          <i class="fas fa-table me-1"></i>
+          Catagory
+        </div>
+        <div class="card-body">
+          <div
+            class="container d-flex justify-content-between flex-wrap flex-md-nowrap align-items-center pt-3 pb-2 mb-3 border-bottom"
+          >
+            <h1 class="h2">
+              <%= locals.title ? locals.title : 'Product Offers' %>
+            </h1>
+
+            <div class="d-flex align-items-center gap-2">
+              <div class="btn-toolbar mb-2 mb-md-0">
+                <form class="d-flex" method="get">
+                  <div class="d-flex align-items-center gap-2">
+                    <div class="form-group">
+                      <label for="startDate">From</label>
+                      <input
+                        type="date"
+                        name="startDate"
+                        id="startDate"
+                        class="form-control"
+                        placeholder="Start Date"
+                        value="<%- startDate %>"
+                      />
+                    </div>
+                    <div class="form-group">
+                      <label for="endDate">To</label>
+                      <input
+                        type="date"
+                        id="endDate"
+                        name="endDate"
+                        class="form-control"
+                        placeholder="End Date"
+                        value="<%- endDate %>"
+                      />
+                    </div>
+                    <div class="form-group">
+                      <button type="submit" class="btn btn-primary">
+                        <i class="bi bi-search"></i>
+                        Get Report
+                      </button>
+                    </div>
+                  </div>
+                </form>
+              </div>
+              <div class="btn-toolbar">
+                <button
+                  onclick="getExcel()"
+                  type="button"
+                  class="btn btn-outline-success"
+                >
+                  <i class="bi bi-file-earmark-spreadsheet"></i>Excel
+                </button>
+                <button
+                  id="exportToButton"
+                  onclick="getPDF()"
+                  type="button"
+                  class="btn btn-outline-danger"
+                >
+                  <i class="bi bi-file-earmark-pdf"></i>PDF
+                </button>
+              </div>
+            </div>
+          </div>
+
+          <main class="main my-5">
+            <div class="mx-5">
+              <% if(orders && orders.length>0) { %>
+
+              <div class="table-responsive container">
+                <table
+                  class="table table-striped align-middle display"
+                  id="salesReportTable"
+                >
+                  <thead>
+                    <tr class="text-center">
+                      <th class="sorting" scope="col">#</th>
+                      <th class="sorting" scope="col">Order Id</th>
+                      <th class="sorting" scope="col">Order Date</th>
+                      <th class="sorting" scope="col">User</th>
+                      <th class="sorting" scope="col">Products</th>
+                      <th class="sorting" scope="col">Shipping Address</th>
+                      <th class="sorting" scope="col">Payment Method</th>
+                      <th class="sorting" scope="col">Status</th>
+                      <th class="sorting" scope="col">Total Amount</th>
+                      <th class="sorting" scope="col">Coupon</th>
+                      <th class="sorting" scope="col">Coupon Discount</th>
+                      <th class="sorting" scope="col">Payable</th>
+                      <th class="sorting" scope="col">Category Discount</th>
+                    </tr>
+                  </thead>
+                  <tbody>
+                    <% orders.forEach((order, index) => { %>
+                    <tr class="text-capitalize">
+                      <td class="text-center"><%=index+1%></td>
+                      <td class="text-center">
+                        <%= order._id.toString().slice(-7).toUpperCase() %>
+                      </td>
+                      <td class="text-center">
+                        <%=order.createdAt.toDateString()%>
+                      </td>
+                      <td><%=order.userID[0].username%></td>
+                      <td>
+                        <ul>
+                          <% if(orders[index].orderedItems &&
+                          orders[index].orderedItems.length>0) {%> <% for(let
+                          j=0 ; j< orders[index].orderedItems.length ; j++ ){%>
+
+                          <li class="text-uppercase list-unstyled mt-3">
+                            <%=orders[index].orderedItems[j].productDetails.product_name%>
+                            ( <%=orders[index].orderedItems[j].quantity%> )
+                          </li>
+                          <% }%> <%}%>
+                        </ul>
+                      </td>
+                      <td class="text-center">
+                        <%=order.shippingAddress?.address%>
+                      </td>
+                      <td><%=order.paymentMethod%></td>
+                      <td><%=order.status%></td>
+                      <td><%=order.totalAmount%></td>
+                      <td class="text-uppercase">
+                        <%=order.coupon[0]?.code ? order.coupon[0].code : "No
+                        Coupon"%>
+                      </td>
+                      <td><%=order.couponDiscount%></td>
+                      <td><%=order.payable.toFixed(2)%></td>
+                      <td class="text-center">
+                        <%=order.categoryDiscount.toFixed(2)%>
+                      </td>
+                    </tr>
+                    <% }) %>
+                  </tbody>
+                </table>
+                <%} else{%>
+                <div class="container">
+                  <div class="text-danger h1">No Orders Found</div>
+                </div>
+              </div>
+
+              <%}%>
+            </div>
+          </main>
+        </div>
+      </div>
+    </div>
+  </main>
+</div>

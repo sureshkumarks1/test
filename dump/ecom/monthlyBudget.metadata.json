@@ -1,0 +1,1 @@
+{"indexes":[{"v":{"$numberInt":"2"},"key":{"_id":{"$numberInt":"1"}},"name":"_id_"}],"uuid":"1320a308b5874d8e84efb933131b1c33","collectionName":"monthlyBudget","type":"collection"}

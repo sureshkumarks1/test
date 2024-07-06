@@ -1,0 +1,460 @@
+<%-include("../layouts/header.ejs")-%>
+<div id="layoutSidenav_content mtp-5">
+  <main>
+    <div class="container-fluid px-4" id="divtable">
+      <h1 class="mt-4">Add Product</h1>
+      <ol class="breadcrumb mb-4">
+        <li class="breadcrumb-item"><a href="/admin/home">Dashboard</a></li>
+        <li class="breadcrumb-item"><a href="/admin/products">Products</a></li>
+        <li class="breadcrumb-item active">Edit Product</li>
+      </ol>
+      <div class="container">
+        
+        <%if(prod){ %>
+
+        <form
+          id="produpdateform"
+          name="productform"
+          method="post"     
+          action="/admin/products/produpdtn"     
+          enctype="multipart/form-data"
+          class="needs-validation"
+          novalidate
+        >
+          <div class="mb-3">
+            <input
+              type="text"
+              class="d-none"
+              name="_id"
+              value="<%=prod._id %>"
+            />
+          </div>
+          <div class="mb-3">
+            <label for="exampleFormControlInput1" class="form-label"
+              >Product Name</label
+            >
+            <input
+              value="<%=prod.name %>"
+              type="text"
+              minlength="3"
+              class="form-control"
+              id="pname"
+              name="pname"
+              placeholder="Enter Product Name"
+              required
+            />
+            <div class="invalid-feedback">Please Enter the Product Name.</div>
+          </div>
+          <input type="hidden" name="" id="productId" value="">
+          <div class="mb-3">
+            <label class="form-label">Product Catagory</label>
+            <% let cate = prod.category.toString() %>
+
+            <select
+              class="form-select"
+              aria-label="Default select"
+              id="pcategory"
+              name="pcategory"
+              required
+            >
+              <option value="">select category</option>
+
+              <% if(category) { category.forEach(cat => { if(cat._id==cate) {%>
+
+              <option selected value="<%= cat._id %>"><%= cat.name %></option>
+              <%} else { %>
+              <option value="<%= cat._id %>"><%= cat.name %></option>
+              <% }%> <%});%> <% } %>
+            </select>
+
+            <div class="invalid-feedback">Please select a valid Category.</div>
+          </div>
+         
+          <div class="mb-3">
+            <!-- <input type="file" id="file" name="file" multiple> -->
+           
+            <input
+            type="file"
+            id="file-input"
+            name="file-input"
+            accept="image/jpeg"
+            multiple
+          />
+
+          <div class="mt-2"><span id="place" class="mx-2"> 
+          <input type="hidden" value="<%= count %>" id="count">
+            <% prod.images.forEach((image, index, arr)=>{
+              %>
+              <span id="parent<%= index%>">              
+              <img
+            src="<%= image %>"
+            width="100px"
+            height="100px"
+            id="img<%= index%>"
+           
+            alt="<%= image %>"
+          />
+          <button type="button" id="<%= index %>" onclick="(this.parentElement.remove(this), $('#addImagesButton').trigger('click'))">Delete</button></span>
+              <%
+            }) %>
+
+          </span></div>
+          </div>
+          <div
+          class="modal fade"
+          id="cropModal"
+          tabindex="-1"
+          role="dialog"
+          aria-labelledby="cropModalLabel"
+          aria-hidden="true"
+        >
+          <div class="modal-dialog modal-lg" role="document">
+            <div class="modal-content">
+              <div class="modal-header">
+                <h5 class="modal-title" id="cropModalLabel">Crop Image</h5>
+                <button
+                  type="button"
+                  class="close"
+                  data-dismiss="modal"
+                  aria-label="Close"
+                  id="crossBtn"
+                >
+                  <span aria-hidden="true">&times;</span>
+                </button>
+              </div>
+              <div class="modal-body">
+                <div class="img-container">
+                  <img id="image" src="" alt="Picture" />
+                </div>
+              </div>
+              <div class="modal-footer">
+                <button
+                  type="button"
+                  class="btn btn-secondary"
+                  data-dismiss="modal"
+                  id="closeBtn"
+                >
+                  Close
+                </button>
+                <button
+                  type="button"
+                  class="btn btn-primary"
+                  id="cropButton"
+                >
+                  Crop
+                </button>
+              </div>
+            </div>
+          </div>
+        </div>
+          <div class="mb-3">
+            <label for="formFile" class="form-label">Product Price </label>
+            <input
+              name="productprice"
+              id="productPrice"
+              type="number"
+              class="form-control"
+              min="1"
+              placeholder="Product Price"
+              required
+              value="<%=prod.price %>"
+            />
+            <div class="invalid-feedback">Please Enter Postive amount.</div>
+         
+        </div>
+          <div class="mb-3">
+            <label for="formFile" class="form-label">Product Stock </label>
+            <input
+              name="productstock"
+              id="productStock"
+              type="number"
+              class="form-control"
+              min="1"
+              placeholder="Product Stock"
+              required
+              value="<%=prod.stock %>"
+            />
+            <div class="invalid-feedback">Please Enter Postive amount.</div>
+          
+          </div>
+          <div class="mb-3">
+            <label for="exampleFormControlTextarea1" class="form-label"
+              >Product's Description</label>
+            <textarea
+              class="form-control"
+              id="pdescription"
+              name="pdescription"
+              rows="3"
+              placeholder="Product Description"
+              required
+            >
+<%=prod.description %></textarea
+            >
+            <div class="invalid-feedback">Please Enter Product Description.</div>
+          </div>
+          <div class="mb-3">
+            <button class="btn btn-primary" id="submit">Submit</button
+            ><input class="btn btn-primary" type="reset" value="Reset" />
+            <button type="button" id="addImagesButton">Add Images from URLs</button>
+          </div>
+        </form>
+        <%} %>
+      </div>
+    </div>
+  </main>
+</div>
+
+
+
+<footer class="py-4 bg-light mt-auto">
+  <div class="container-fluid px-4">
+      <div class="d-flex align-items-center justify-content-between small">
+          <div class="text-muted">Copyright &copy; Your Website 2023</div>
+          <div>
+              <a href="#">Privacy Policy</a>
+              &middot;
+              <a href="#">Terms &amp; Conditions</a>
+          </div>
+      </div>
+  </div>
+</footer>
+</div>
+</div>
+
+<script src="/login/js/bootstrap.bundle.min.js" crossorigin="anonymous"></script>
+<script src="/login/js/admin-script.js"></script>
+<script src="/login/js/formvalidate.js" crossorigin="anonymous"></script>
+<script type="text/javascript" src="https://cdn.jsdelivr.net/npm/toastify-js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/cropperjs/1.5.12/cropper.min.js"></script>
+
+<script>
+        document.getElementById('addImagesButton').addEventListener('click', function() {
+          
+            const imageSrcArray =  document.querySelectorAll('#place img');
+            const imageUrls = Array.from(imageSrcArray).map(img => img.src);
+            // console.log(imageUrls)
+           addImagesToInput(imageUrls);
+        });
+
+        async function addImagesToInput(imageUrls) {
+            const fileInput = document.getElementById('file-input');
+
+            const filesArray = Array.from(fileInput.files);
+            const dataTransfer = new DataTransfer();
+
+            // Add existing files from the file input
+            filesArray.forEach(file => dataTransfer.items.add(file));
+
+            // Fetch images and convert to File objects
+            for (const url of imageUrls) {
+                const response = await fetch(url);
+                const blob = await response.blob();
+                const filename = url.split('/').pop();
+                const file = new File([blob], filename, { type: blob.type });
+                dataTransfer.items.add(file);
+            }
+
+            // Update the file input with the new FileList
+            fileInput.files = dataTransfer.files;
+
+            // console.log('File input updated with files:', fileInput.files);
+          }
+          $("#submit").focus(function(){
+            $('#addImagesButton').trigger('click');
+          });
+
+            document.getElementById('produpdateform').addEventListener('submit',async function(event) {
+            event.preventDefault(); // Prevent the form from submitting the default way
+            
+           
+            const formData = new FormData(this);
+
+            // Print FormData content
+            // for (const [key, value] of formData.entries()) {
+            //     console.log(`${key}:`, value);
+            // }
+
+            // Send FormData via fetch to server
+            if(pname != "" && pcategory != "" && productPrice != "" && productStock != "" && pdescription != "" ){
+            try {
+            const url = "http://localhost:3000/admin/products/produpdtn";
+            const response = await fetch(url, {
+            method: "POST",
+
+            body: formData,
+            });
+
+            console.log("Upload success", response);
+            } catch (error) {
+            console.error("Upload error", error);
+            }
+            }
+        });
+
+
+
+        
+
+    </script>
+
+<script>
+function deleteImage(id) {
+  document.getElementById("img" + id).remove();
+  document.getElementById("parent"+id).remove();
+ }
+
+ // Function to fetch the image and create a local file
+async function createFileFromImageUrl(imageUrl) {
+    try {
+        // Fetch the image as a Blob
+        const response = await fetch(imageUrl);
+        const blob = await response.blob();
+
+        // Create a temporary URL for the Blob
+        // const blobUrl = URL.createObjectURL(blob);
+
+        const file = new File([blob], "image.jpeg", {
+          type: blob.type,
+          lastModified: new Date().getTime(),
+        });
+        return file;
+        // const dataTransfer = new DataTransfer();
+        // dataTransfer.items.add(file);
+
+        // const fileInput = document.getElementById('file-input');
+        // fileInput.files = dataTransfer.files;
+      
+    } catch (error) {
+        console.error('Error creating file:', error);
+    }
+}
+  $(document).ready(function (){
+
+    const queryString = window.location.pathname;
+    const id = queryString.split("/");
+    const newId = id.pop();    
+    $("#productId").val(newId);
+
+
+let imageLoation = document.getElementById("place");
+
+let cropper;
+let $image = $("#image");
+let $imgContainer = $(".img-container");
+let $imgPlace = $(".img-container img");
+
+$("#file-input").change(function (event) {
+  let files = event.target.files;
+
+  let done = function (url) {
+    $image.attr("src", url);
+    $image.css("width", "100%");
+    $("#cropModal").modal("show");
+  };
+  let reader;
+  let file;
+  if (files && files.length > 0) {
+    file = files[0];
+    if (URL) {
+      done(URL.createObjectURL(file));
+    } else if (FileReader) {
+      reader = new FileReader();
+      reader.onload = function (event) {
+        done(reader.result);
+      };
+      reader.readAsDataURL(file);
+    }
+  }
+  // $("#file-input").val("");
+});
+
+$("#cropModal")
+  .on("shown.bs.modal", function () {
+    $imgContainer.css({
+      width: "auto",
+      height: "auto",
+      "max-height": "60vh",
+      overflow: "hidden",
+      margin: "0 auto",
+    });
+
+    cropper = new Cropper($image[0], {
+      responsive: true,
+      restore: false,
+      guides: false,
+      center: true,
+      highlight: true,
+      cropBoxMovable: true,
+      cropBoxResizable: true,
+    });
+  })
+  .on("hidden.bs.modal", function () {
+    $("#file-input").val("");
+    cropper.destroy();
+    cropper = null;
+    $('#addImagesButton').trigger('click');
+  });
+
+$("#cropButton").click(function () {
+let count = $("#count").val()
+  if (cropper) {
+    let canvas = cropper.getCroppedCanvas();
+    canvas.toBlob(function (blob) {
+      let url = URL.createObjectURL(blob);
+      let img = document.createElement("img");
+      img.src = url;
+      img.style = "margin:6px";
+      img.width = "100";
+      img.height = "100";
+      img.id = "img"+count;
+
+      const deleteBtn = document.createElement('button',{onclick:""});
+                deleteBtn.className = 'btn-danger';
+                deleteBtn.textContent = 'Delete';
+                deleteBtn.id =count;
+                deleteBtn.onclick =  function () {
+    this.parentElement.remove(this);
+    $('#addImagesButton').trigger('click');
+};
+
+      
+      const span = document.createElement("span");
+      span.id = "parent"+count
+     span.appendChild(img);
+     span.appendChild(deleteBtn);
+      // imageLoation.appendChild(img);
+      imageLoation.appendChild(span);
+      // imageLoation.appendChild(deleteBtn);
+
+      const file = new File([blob], "image.jpeg", {
+        type: blob.type,
+        lastModified: new Date().getTime(),
+      });
+      // console.log(file);
+      files.push(file);
+    });
+    $(".btn-danger").attr("onclick", "deleteImage(2)")
+    // cropper.destroy();
+    // cropper = null;
+    $("#cropModal").modal("hide");
+  }
+});
+
+$("#closeBtn").on("click", () => {
+  $("#file-input").val("");
+  $("#cropModal").modal("hide");
+});
+$("#crossBtn").on("click", () => {
+  $("#file-input").val("");
+  $("#cropModal").modal("hide");
+});
+
+  });
+
+
+
+</script>
+<!-- <script src="/login/js/editprod.js" crossorigin="anonymous"></script> -->
+</body>
+</html>
+

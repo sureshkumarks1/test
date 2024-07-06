@@ -1,0 +1,1 @@
+{"options":{"viewOn":"orders","pipeline":[{"$lookup":{"from":"inventory","localField":"prodId","foreignField":"prodId","as":"inventoryDocs"}},{"$project":{"_id":{"$numberInt":"0"},"prodId":{"$numberInt":"1"},"orderId":{"$numberInt":"1"},"numPurchased":{"$numberInt":"1"},"price":"$inventoryDocs.price"}},{"$unwind":"$price"}]},"indexes":[],"collectionName":"newsales","type":"view"}

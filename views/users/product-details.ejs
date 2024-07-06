@@ -1,0 +1,8 @@
+<%- include('files/header.ejs') %>
+<body>
+  <% if (name) { %> <%- include('files/navbar.ejs', {name}) %> <% } else { %>
+  <%- include('files/navbar.ejs', {name:""}) %> <% } %> <%-
+  include('files/newproddet.ejs') %> <%-include('files/footer.ejs') %>
+
+  <script></script>
+</body>

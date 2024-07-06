@@ -1,0 +1,8 @@
+//getting admin dashboard details
+//http://localhost:3000/admin/dashboardData
+
+//getting product details
+
+http://localhost:3000/admin/products/getproduct/668545717b1084b006ce9990
+
+
